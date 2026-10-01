@@ -11,6 +11,7 @@ games = {}  # gameId -> game data
 class CreateGameRequest(BaseModel):
     gameName: str
     timeControl: str
+    side: str  # New field for side selection
 
 class CreateGameResponse(BaseModel):
     gameId: str
@@ -44,7 +45,7 @@ class EndGameResponse(BaseModel):
 async def create_game(request: CreateGameRequest):
     game_id = str(len(games) + 1)  # Just an example id generation
     user_id = str(len(games) + 1)  # Each user gets a unique id
-    games[game_id] = {"name": request.gameName, "timeControl": request.timeControl, "status": "waiting", "board": [[]], "players": [user_id]}
+    games[game_id] = {"name": request.gameName, "timeControl": request.timeControl, "side": request.side, "status": "waiting", "board": [[]], "players": [user_id]}
     return CreateGameResponse(gameId=game_id, userId=user_id)
 
 @app.post('/api/join-game', response_model=JoinGameResponse)
